@@ -51,7 +51,6 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
       jsonRpcUrl = "https://" + chain + ".infura.io/v3/" + infuraApiKey;
   }
   return {
-    accounts: accounts,
     chainId: chainIds[chain],
     url: jsonRpcUrl,
   };
