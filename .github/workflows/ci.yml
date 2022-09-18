@@ -1,8 +1,8 @@
 name: "CI"
 
 env:
-  INFURA_API_KEY: "2b5dd222b8df4c59ba686077dc2e0fe6"
-  MNEMONIC: "year isolate brother fruit wealth visit woman knife mansion broccoli calm ghost"
+  INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
+  MNEMONIC: ${{ secrets.MNEMONIC }}
 
 on:
   pull_request:
