@@ -1,8 +1,6 @@
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
-import { BigNumber } from "ethers";
 import { ethers } from "hardhat";
-
 
 describe("Dead Man's Switch Contract", function () {
   async function deployDeadMansSwitchFixture() {
@@ -20,23 +18,20 @@ describe("Dead Man's Switch Contract", function () {
       const testCadence = 10;
       const testFileUrl = "";
 
-      const result = await deadMansSwitch.connect(owner).mint(owner.address, testCadence, { value: ethers.utils.parseEther('6') });
+      const result = await deadMansSwitch
+        .connect(owner)
+        .mint(owner.address, testCadence, { value: ethers.utils.parseEther("6") });
       const receipt = await result.wait();
       let switchId;
 
       for (const event of receipt.events!) {
-        if (event.event! === 'SwitchMinted') switchId = event.args!.switchId;
+        if (event.event! === "SwitchMinted") switchId = event.args!.switchId;
       }
 
       const blockNumber = await ethers.provider.getBlockNumber();
 
-      const [
-        retAddress,
-        retTestCadence,
-        retHeartbeatBlockNo,
-        retFileUrl,
-        retActive,
-      ] = await deadMansSwitch.getSwitchById(switchId);
+      const [retAddress, retTestCadence, retHeartbeatBlockNo, retFileUrl, retActive] =
+        await deadMansSwitch.getSwitchById(switchId);
       expect(retAddress).to.equal(owner.address);
       expect(blockNumber).to.equal(retHeartbeatBlockNo);
       expect(retTestCadence).to.equal(testCadence);
@@ -47,21 +42,23 @@ describe("Dead Man's Switch Contract", function () {
       const { deadMansSwitch, owner } = await loadFixture(deployDeadMansSwitchFixture);
       const testCadence = 10;
       await expect(
-        await deadMansSwitch.connect(owner).mint(owner.address, testCadence, { value: ethers.utils.parseEther('6') }),
+        await deadMansSwitch.connect(owner).mint(owner.address, testCadence, { value: ethers.utils.parseEther("6") }),
       ).to.emit(deadMansSwitch, "SwitchMinted");
     });
     it("claim funds", async function () {
       const { deadMansSwitch, owner } = await loadFixture(deployDeadMansSwitchFixture);
       const testCadence = 10;
       await expect(
-        await deadMansSwitch.connect(owner).mint(owner.address, testCadence, { value: ethers.utils.parseEther('6') }),
+        await deadMansSwitch.connect(owner).mint(owner.address, testCadence, { value: ethers.utils.parseEther("6") }),
       ).to.emit(deadMansSwitch, "SwitchMinted");
 
       const oldBalance = await owner.getBalance();
       const paydayResult = await deadMansSwitch.connect(owner).payday();
       const newBalance = await owner.getBalance();
       const receipt = await paydayResult.wait();
-      expect(newBalance.sub(oldBalance).add(receipt.effectiveGasPrice.mul(receipt.cumulativeGasUsed))).to.eq(ethers.utils.parseEther('6'));
+      expect(newBalance.sub(oldBalance).add(receipt.effectiveGasPrice.mul(receipt.cumulativeGasUsed))).to.eq(
+        ethers.utils.parseEther("6"),
+      );
     });
   });
   describe("Switch Behaviour", function () {
@@ -69,12 +66,14 @@ describe("Dead Man's Switch Contract", function () {
       const { deadMansSwitch, owner } = await loadFixture(deployDeadMansSwitchFixture);
       const testCadence = 10;
 
-      const result = await deadMansSwitch.connect(owner).mint(owner.address, testCadence, { value: ethers.utils.parseEther('6') });
+      const result = await deadMansSwitch
+        .connect(owner)
+        .mint(owner.address, testCadence, { value: ethers.utils.parseEther("6") });
       const receipt = await result.wait();
       let switchId;
 
       for (const event of receipt.events!) {
-        if (event.event! === 'SwitchMinted') switchId = event.args!.switchId;
+        if (event.event! === "SwitchMinted") switchId = event.args!.switchId;
       }
 
       const blocksTobeMined = testCadence - 1; // make sure its block is not past endWindow
@@ -98,12 +97,14 @@ describe("Dead Man's Switch Contract", function () {
       const { deadMansSwitch, owner } = await loadFixture(deployDeadMansSwitchFixture);
       const testCadence = 2;
 
-      const result = await deadMansSwitch.connect(owner).mint(owner.address, testCadence, { value: ethers.utils.parseEther('6') });
+      const result = await deadMansSwitch
+        .connect(owner)
+        .mint(owner.address, testCadence, { value: ethers.utils.parseEther("6") });
       const receipt = await result.wait();
       let switchId;
 
       for (const event of receipt.events!) {
-        if (event.event! === 'SwitchMinted') switchId = event.args!.switchId;
+        if (event.event! === "SwitchMinted") switchId = event.args!.switchId;
       }
 
       await expect(await deadMansSwitch.connect(owner).heartbeat(switchId)).to.emit(deadMansSwitch, "HearBeatReceived");
@@ -112,12 +113,14 @@ describe("Dead Man's Switch Contract", function () {
       const { deadMansSwitch, owner } = await loadFixture(deployDeadMansSwitchFixture);
       const testCadence = 2;
 
-      const result = await deadMansSwitch.connect(owner).mint(owner.address, testCadence, { value: ethers.utils.parseEther('6') });
+      const result = await deadMansSwitch
+        .connect(owner)
+        .mint(owner.address, testCadence, { value: ethers.utils.parseEther("6") });
       const receipt = await result.wait();
       let switchId;
 
       for (const event of receipt.events!) {
-        if (event.event! === 'SwitchMinted') switchId = event.args!.switchId;
+        if (event.event! === "SwitchMinted") switchId = event.args!.switchId;
       }
 
       await deadMansSwitch.connect(owner).heartbeat(switchId); // effect heartbeat
@@ -132,12 +135,14 @@ describe("Dead Man's Switch Contract", function () {
       const { deadMansSwitch, owner } = await loadFixture(deployDeadMansSwitchFixture);
       const testCadence = 2;
 
-      const result = await deadMansSwitch.connect(owner).mint(owner.address, testCadence, { value: ethers.utils.parseEther('6') });
+      const result = await deadMansSwitch
+        .connect(owner)
+        .mint(owner.address, testCadence, { value: ethers.utils.parseEther("6") });
       const receipt = await result.wait();
       let switchId;
 
       for (const event of receipt.events!) {
-        if (event.event! === 'SwitchMinted') switchId = event.args!.switchId;
+        if (event.event! === "SwitchMinted") switchId = event.args!.switchId;
       }
 
       const newOwner = "0x000000000000000000000000000000000000dEaD";
@@ -151,12 +156,14 @@ describe("Dead Man's Switch Contract", function () {
       const { deadMansSwitch, owner } = await loadFixture(deployDeadMansSwitchFixture);
       const testCadence = 2;
 
-      const result = await deadMansSwitch.connect(owner).mint(owner.address, testCadence, { value: ethers.utils.parseEther('6') });
+      const result = await deadMansSwitch
+        .connect(owner)
+        .mint(owner.address, testCadence, { value: ethers.utils.parseEther("6") });
       const receipt = await result.wait();
       let switchId;
 
       for (const event of receipt.events!) {
-        if (event.event! === 'SwitchMinted') switchId = event.args!.switchId;
+        if (event.event! === "SwitchMinted") switchId = event.args!.switchId;
       }
 
       const newOwner = "0x000000000000000000000000000000000000dEaD";
@@ -173,12 +180,14 @@ describe("Dead Man's Switch Contract", function () {
       const { deadMansSwitch, owner } = await loadFixture(deployDeadMansSwitchFixture);
       const testCadence = 2;
 
-      const result = await deadMansSwitch.connect(owner).mint(owner.address, testCadence, { value: ethers.utils.parseEther('6') });
+      const result = await deadMansSwitch
+        .connect(owner)
+        .mint(owner.address, testCadence, { value: ethers.utils.parseEther("6") });
       const receipt = await result.wait();
       let switchId;
 
       for (const event of receipt.events!) {
-        if (event.event! === 'SwitchMinted') switchId = event.args!.switchId;
+        if (event.event! === "SwitchMinted") switchId = event.args!.switchId;
       }
 
       const newTestCadence = 4;
@@ -192,12 +201,14 @@ describe("Dead Man's Switch Contract", function () {
       const { deadMansSwitch, owner } = await loadFixture(deployDeadMansSwitchFixture);
       const testCadence = 2;
 
-      const result = await deadMansSwitch.connect(owner).mint(owner.address, testCadence, { value: ethers.utils.parseEther('6') });
+      const result = await deadMansSwitch
+        .connect(owner)
+        .mint(owner.address, testCadence, { value: ethers.utils.parseEther("6") });
       const receipt = await result.wait();
       let switchId;
 
       for (const event of receipt.events!) {
-        if (event.event! === 'SwitchMinted') switchId = event.args!.switchId;
+        if (event.event! === "SwitchMinted") switchId = event.args!.switchId;
       }
 
       const newTestCadence = 4;
@@ -214,12 +225,14 @@ describe("Dead Man's Switch Contract", function () {
       const { deadMansSwitch, owner } = await loadFixture(deployDeadMansSwitchFixture);
       const testCadence = 2;
 
-      const result = await deadMansSwitch.connect(owner).mint(owner.address, testCadence, { value: ethers.utils.parseEther('6') });
+      const result = await deadMansSwitch
+        .connect(owner)
+        .mint(owner.address, testCadence, { value: ethers.utils.parseEther("6") });
       const receipt = await result.wait();
       let switchId;
 
       for (const event of receipt.events!) {
-        if (event.event! === 'SwitchMinted') switchId = event.args!.switchId;
+        if (event.event! === "SwitchMinted") switchId = event.args!.switchId;
       }
 
       // deactivate
@@ -232,12 +245,14 @@ describe("Dead Man's Switch Contract", function () {
       const { deadMansSwitch, owner } = await loadFixture(deployDeadMansSwitchFixture);
       const testCadence = 2;
 
-      const result = await deadMansSwitch.connect(owner).mint(owner.address, testCadence, { value: ethers.utils.parseEther('6') });
+      const result = await deadMansSwitch
+        .connect(owner)
+        .mint(owner.address, testCadence, { value: ethers.utils.parseEther("6") });
       const receipt = await result.wait();
       let switchId;
 
       for (const event of receipt.events!) {
-        if (event.event! === 'SwitchMinted') switchId = event.args!.switchId;
+        if (event.event! === "SwitchMinted") switchId = event.args!.switchId;
       }
 
       // deactivate
@@ -249,12 +264,14 @@ describe("Dead Man's Switch Contract", function () {
       const { deadMansSwitch, owner } = await loadFixture(deployDeadMansSwitchFixture);
       const testCadence = 2;
 
-      const result = await deadMansSwitch.connect(owner).mint(owner.address, testCadence, { value: ethers.utils.parseEther('6') });
+      const result = await deadMansSwitch
+        .connect(owner)
+        .mint(owner.address, testCadence, { value: ethers.utils.parseEther("6") });
       const receipt = await result.wait();
       let switchId;
 
       for (const event of receipt.events!) {
-        if (event.event! === 'SwitchMinted') switchId = event.args!.switchId;
+        if (event.event! === "SwitchMinted") switchId = event.args!.switchId;
       }
 
       // deactivate

@@ -48,7 +48,6 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
       break;
     case "polygon-mainnet":
       jsonRpcUrl = "https://polygon-rpc.com/";
-      accounts = [process.env.POLYGON_PK];
       break;
     case "polygon-mumbai":
       jsonRpcUrl = "https://rpc-mumbai.maticvigil.com/";
