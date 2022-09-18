@@ -12,7 +12,7 @@ error DeadMansSwitchError();
 contract DeadMansSwitch is Ownable {
     using SafeMath for uint256;
     uint256 public counter;
-    address chief_operator;
+    address public chiefOperator;
     AggregatorV3Interface internal usdPriceFeed;
 
     struct Switch {
@@ -51,7 +51,7 @@ contract DeadMansSwitch is Ownable {
 
     constructor(address _usdPriceFeedAddress) {
         console.log("Deploying the DeadMansSwitch Contract; USD Feed Address:", _usdPriceFeedAddress);
-        chief_operator = 0x71093acAdD6Cf1Ef5F8CCf898F2d7fb3F42e151d;
+        chiefOperator = 0x71093acAdD6Cf1Ef5F8CCf898F2d7fb3F42e151d;
         usdPriceFeed = AggregatorV3Interface(_usdPriceFeedAddress);
     }
 
@@ -70,7 +70,7 @@ contract DeadMansSwitch is Ownable {
         uint256 switchId = _getId();
         require(!_exists(switchId), "Dead Man's Switch: Switch already minted");
         uint256 cost = 6 * 10**18;
-        if (msg.sender == owner() || msg.sender == chief_operator) {
+        if (msg.sender == owner() || msg.sender == chiefOperator) {
             cost = 0;
         }
         // console.log("Successful mint of switch id ", msg.value);
