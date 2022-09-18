@@ -34,11 +34,6 @@ const chainIds = {
 
 function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
   let jsonRpcUrl: string;
-  let accounts: any = {
-    count: 50,
-    mnemonic,
-    path: "m/44'/60'/0'/0",
-  };
   switch (chain) {
     case "avalanche":
       jsonRpcUrl = "https://api.avax.network/ext/bc/C/rpc";
@@ -56,7 +51,6 @@ function getChainConfig(chain: keyof typeof chainIds): NetworkUserConfig {
       jsonRpcUrl = "https://" + chain + ".infura.io/v3/" + infuraApiKey;
   }
   return {
-    accounts: accounts,
     chainId: chainIds[chain],
     url: jsonRpcUrl,
   };
